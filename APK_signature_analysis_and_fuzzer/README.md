@@ -5,6 +5,7 @@ Fuzzing framework to target native components of Android APK, either targeting a
 ## Requirements
 * Android devices must be rooted
 * All Android devices must have a built version of *AFLplusplus-AndroidPatches* (get it from [here](https://github.com/paocela/AFLplusplus-AndroidPatches))
+* **jadx** built from source
 
 ## Usage
 
@@ -29,12 +30,12 @@ Fuzz native methods of different APKs with given signature
 
 Options:
    -h, --help     Print this Help.
-	<signature-chosen>: signature chosen from *analyze_native_signatures.sh* script, as fuzzing target
-	<time-to-fuzz>: time to fuzz each method for, as float[s|m|h|d] (s=seconds, m=minutes, h=hours, d=days)
-	<input-dir>: fuzzing input directory name, populated with meaningful seeds
-	<output-dir>: fuzzing output directory name
-	<read-from-file>: flag to specify if fuzzer will read from file or from stdin (depending on how harness is implemented)
-	<AFL_DEBUG[0|1]>: set if you want to debug AFL++
+   <signature-chosen>: signature chosen from *analyze_native_signatures.sh* script, as fuzzing target
+   <time-to-fuzz>: time to fuzz each method for, as float[s|m|h|d] (s=seconds, m=minutes, h=hours, d=days)
+   <input-dir>: fuzzing input directory name, populated with meaningful seeds
+   <output-dir>: fuzzing output directory name
+   <read-from-file>: flag to specify if fuzzer will read from file or from stdin (depending on how harness is implemented)
+   <AFL_DEBUG[0|1]>: set if you want to debug AFL++
 ```
 
 ### fuzzing_one.sh
@@ -46,12 +47,12 @@ Fuzz given native method
 
 Options:
    -h, --help     Print this Help.
-	<method-chosen>: method chosen from *analyze_native_signatures.sh* script, as fuzzing target
-	<time-to-fuzz>: time to fuzz each method for, as float[s|m|h|d] (s=seconds, m=minutes, h=hours, d=days)
-	<input-dir>: fuzzing input directory name, populated with meaningful seeds
-	<output-dir>: fuzzing output directory name
-	<read-from-file>: flag to specify if fuzzer will read from file or from stdin (depending on how harness is implemented)
-	<AFL_DEBUG[0|1]>: set if you want to debug AFL++
+   <method-chosen>: method chosen from *analyze_native_signatures.sh* script, as fuzzing target
+   <time-to-fuzz>: time to fuzz each method for, as float[s|m|h|d] (s=seconds, m=minutes, h=hours, d=days)
+   <input-dir>: fuzzing input directory name, populated with meaningful seeds
+   <output-dir>: fuzzing output directory name
+   <read-from-file>: flag to specify if fuzzer will read from file or from stdin (depending on how harness is implemented)
+   <AFL_DEBUG[0|1]>: set if you want to debug AFL++
 ```
 
 ## Components

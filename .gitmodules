@@ -1,3 +1,6 @@
 [submodule "Root-Samsung-A40"]
 	path = Root-Samsung-A40
 	url = https://github.com/paocela/Root-Samsung-A40.git
+[submodule "APK_signature_analysis_and_fuzzer/jadx"]
+	path = APK_signature_analysis_and_fuzzer/jadx
+	url = https://github.com/skylot/jadx.git
