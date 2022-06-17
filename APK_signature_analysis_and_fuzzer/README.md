@@ -24,7 +24,7 @@ Options:
 ### fuzzing_driver.sh
 
 ```
-Syntax: ./fuzzing_driver <signature-chosen> <time-to-fuzz> <input-dir> <output-dir> <read-from-file[0|1]> <AFL_DEBUG[0|1]>
+Syntax: ./fuzzing_driver.sh <signature-chosen> <time-to-fuzz> <input-dir> <output-dir> <read-from-file[0|1]> <AFL_DEBUG[0|1]>
 
 Fuzz native methods of different APKs with given signature
 
@@ -41,7 +41,7 @@ Options:
 ### fuzzing_one.sh
 
 ```
-Syntax: ./fuzzing_one <method-chosen> <time-to-fuzz> <input-dir> <output-dir> <read-from-file[0|1]> <AFL_DEBUG[0|1]>
+Syntax: ./fuzzing_one.sh <method-chosen> <time-to-fuzz> <input-dir> <output-dir> <read-from-file[0|1]> <AFL_DEBUG[0|1]>
 
 Fuzz given native method
 
