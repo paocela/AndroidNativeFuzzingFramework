@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/home/paocela/AndroidStudioProjects/HelloJNICallback/app/.cxx/Debug/3m6o3l1r/x86",
+  "command": "/home/paocela/Android/Sdk/ndk/22.1.7171670/toolchains/llvm/prebuilt/linux-x86_64/bin/clang --target=i686-none-linux-android21 --gcc-toolchain=/home/paocela/Android/Sdk/ndk/22.1.7171670/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/paocela/Android/Sdk/ndk/22.1.7171670/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Dhello_jnicallback_EXPORTS -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -mstackrealign -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -O0 -fno-limit-debug-info  -fPIC -o CMakeFiles/hello-jnicallback.dir/hello-jnicallback.c.o -c /home/paocela/AndroidStudioProjects/HelloJNICallback/app/src/main/cpp/hello-jnicallback.c",
+  "file": "/home/paocela/AndroidStudioProjects/HelloJNICallback/app/src/main/cpp/hello-jnicallback.c"
+}
+]

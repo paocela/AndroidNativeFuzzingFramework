@@ -1,0 +1,8 @@
+Executable : /home/paocela/Android/Sdk/cmake/3.18.1/bin/ninja
+arguments : 
+-C
+/home/paocela/AndroidStudioProjects/HelloJNICallback/app/.cxx/Debug/3q592b60/armeabi-v7a
+hello-jnicallback
+testLib
+jvmArgs : 
+

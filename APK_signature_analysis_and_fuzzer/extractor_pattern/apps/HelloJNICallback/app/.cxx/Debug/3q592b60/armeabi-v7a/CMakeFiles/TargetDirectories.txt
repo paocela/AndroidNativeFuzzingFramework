@@ -1,0 +1,4 @@
+/home/paocela/AndroidStudioProjects/HelloJNICallback/app/.cxx/Debug/3q592b60/armeabi-v7a/CMakeFiles/rebuild_cache.dir
+/home/paocela/AndroidStudioProjects/HelloJNICallback/app/.cxx/Debug/3q592b60/armeabi-v7a/CMakeFiles/edit_cache.dir
+/home/paocela/AndroidStudioProjects/HelloJNICallback/app/.cxx/Debug/3q592b60/armeabi-v7a/CMakeFiles/testLib.dir
+/home/paocela/AndroidStudioProjects/HelloJNICallback/app/.cxx/Debug/3q592b60/armeabi-v7a/CMakeFiles/hello-jnicallback.dir

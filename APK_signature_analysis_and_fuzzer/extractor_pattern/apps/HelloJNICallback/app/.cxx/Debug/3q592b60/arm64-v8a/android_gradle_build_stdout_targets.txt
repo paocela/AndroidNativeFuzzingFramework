@@ -1,0 +1,7 @@
+ninja: Entering directory `/home/paocela/AndroidStudioProjects/HelloJNICallback/app/.cxx/Debug/3q592b60/arm64-v8a'
+[1/2] Building C object CMakeFiles/hello-jnicallback.dir/hello-jnicallback.c.o
+/home/paocela/AndroidStudioProjects/HelloJNICallback/app/src/main/cpp/hello-jnicallback.c:118:42: warning: incompatible pointer to integer conversion passing 'char [2]' to parameter of type 'jint' (aka 'int') [-Wint-conversion]
+    (*env)->SetIntField(env, thiz, f_id, "8");
+                                         ^~~
+1 warning generated.
+[2/2] Linking C shared library /home/paocela/AndroidStudioProjects/HelloJNICallback/app/build/intermediates/cxx/Debug/3q592b60/obj/arm64-v8a/libhello-jnicallback.so

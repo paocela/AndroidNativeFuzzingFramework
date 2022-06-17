@@ -1,0 +1,23 @@
+                    Executable : /home/paocela/Android/Sdk/cmake/3.18.1/bin/cmake
+arguments : 
+-H/home/paocela/AndroidStudioProjects/HelloJNICallback/app/src/main/cpp
+-DCMAKE_SYSTEM_NAME=Android
+-DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+-DCMAKE_SYSTEM_VERSION=21
+-DANDROID_PLATFORM=android-21
+-DANDROID_ABI=arm64-v8a
+-DCMAKE_ANDROID_ARCH_ABI=arm64-v8a
+-DANDROID_NDK=/home/paocela/Android/Sdk/ndk/22.1.7171670
+-DCMAKE_ANDROID_NDK=/home/paocela/Android/Sdk/ndk/22.1.7171670
+-DCMAKE_TOOLCHAIN_FILE=/home/paocela/Android/Sdk/ndk/22.1.7171670/build/cmake/android.toolchain.cmake
+-DCMAKE_MAKE_PROGRAM=/home/paocela/Android/Sdk/cmake/3.18.1/bin/ninja
+-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=/home/paocela/AndroidStudioProjects/HelloJNICallback/app/build/intermediates/cxx/RelWithDebInfo/474d3ag6/obj/arm64-v8a
+-DCMAKE_RUNTIME_OUTPUT_DIRECTORY=/home/paocela/AndroidStudioProjects/HelloJNICallback/app/build/intermediates/cxx/RelWithDebInfo/474d3ag6/obj/arm64-v8a
+-DCMAKE_BUILD_TYPE=RelWithDebInfo
+-B/home/paocela/AndroidStudioProjects/HelloJNICallback/app/.cxx/RelWithDebInfo/474d3ag6/arm64-v8a
+-GNinja
+jvmArgs : 
+
+
+                    Build command args: []
+                    Version: 2

@@ -1,0 +1,22 @@
+# ninja log v5
+0	48	1647359005	CMakeFiles/testLib.dir/testLib.c.o	123056edb7785a03
+48	79	1647359005	/home/paocela/AndroidStudioProjects/HelloJNICallback/app/build/intermediates/cxx/Debug/3q592b60/obj/x86_64/libtestLib.so	16e183e1c89ccd65
+0	81	1647359005	CMakeFiles/hello-jnicallback.dir/hello-jnicallback.c.o	d9ecf9c2162814a8
+81	94	1647359005	/home/paocela/AndroidStudioProjects/HelloJNICallback/app/build/intermediates/cxx/Debug/3q592b60/obj/x86_64/libhello-jnicallback.so	92fa5005d7b503ae
+0	54	1647360276	CMakeFiles/testLib.dir/testLib.c.o	123056edb7785a03
+0	23	1647360411	/home/paocela/AndroidStudioProjects/HelloJNICallback/app/build/intermediates/cxx/Debug/3q592b60/obj/x86_64/libtestLib.so	16e183e1c89ccd65
+23	46	1647360411	/home/paocela/AndroidStudioProjects/HelloJNICallback/app/build/intermediates/cxx/Debug/3q592b60/obj/x86_64/libhello-jnicallback.so	92fa5005d7b503ae
+1	74	1647419148	CMakeFiles/hello-jnicallback.dir/hello-jnicallback.c.o	d9ecf9c2162814a8
+74	117	1647419148	/home/paocela/AndroidStudioProjects/HelloJNICallback/app/build/intermediates/cxx/Debug/3q592b60/obj/x86_64/libhello-jnicallback.so	92fa5005d7b503ae
+1	166	1647420747	CMakeFiles/hello-jnicallback.dir/hello-jnicallback.c.o	d9ecf9c2162814a8
+166	268	1647420747	/home/paocela/AndroidStudioProjects/HelloJNICallback/app/build/intermediates/cxx/Debug/3q592b60/obj/x86_64/libhello-jnicallback.so	92fa5005d7b503ae
+0	89	1647422552	CMakeFiles/hello-jnicallback.dir/hello-jnicallback.c.o	d9ecf9c2162814a8
+89	112	1647422552	/home/paocela/AndroidStudioProjects/HelloJNICallback/app/build/intermediates/cxx/Debug/3q592b60/obj/x86_64/libhello-jnicallback.so	92fa5005d7b503ae
+3	210	1647424706	CMakeFiles/hello-jnicallback.dir/hello-jnicallback.c.o	d9ecf9c2162814a8
+210	358	1647424706	/home/paocela/AndroidStudioProjects/HelloJNICallback/app/build/intermediates/cxx/Debug/3q592b60/obj/x86_64/libhello-jnicallback.so	92fa5005d7b503ae
+3	79	1647445990	CMakeFiles/hello-jnicallback.dir/hello-jnicallback.c.o	d9ecf9c2162814a8
+79	125	1647445990	/home/paocela/AndroidStudioProjects/HelloJNICallback/app/build/intermediates/cxx/Debug/3q592b60/obj/x86_64/libhello-jnicallback.so	92fa5005d7b503ae
+0	61	1647446326	CMakeFiles/hello-jnicallback.dir/hello-jnicallback.c.o	d9ecf9c2162814a8
+61	77	1647446326	/home/paocela/AndroidStudioProjects/HelloJNICallback/app/build/intermediates/cxx/Debug/3q592b60/obj/x86_64/libhello-jnicallback.so	92fa5005d7b503ae
+1	64	1647446463	CMakeFiles/hello-jnicallback.dir/hello-jnicallback.c.o	d9ecf9c2162814a8
+64	78	1647446463	/home/paocela/AndroidStudioProjects/HelloJNICallback/app/build/intermediates/cxx/Debug/3q592b60/obj/x86_64/libhello-jnicallback.so	92fa5005d7b503ae

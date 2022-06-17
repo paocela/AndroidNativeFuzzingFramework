@@ -1,0 +1,68 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.4.1"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "Project",
+					"targetIndexes" : 
+					[
+						0,
+						1
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "hello-jnicallback::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-hello-jnicallback-Debug-ce51124b2d72bd48110b.json",
+					"name" : "hello-jnicallback",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "testLib::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-testLib-Debug-fbfab826dfe1828e31c6.json",
+					"name" : "testLib",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/home/paocela/AndroidStudioProjects/HelloJNICallback/app/.cxx/Debug/3q592b60/x86",
+		"source" : "/home/paocela/AndroidStudioProjects/HelloJNICallback/app/src/main/cpp"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 1
+	}
+}

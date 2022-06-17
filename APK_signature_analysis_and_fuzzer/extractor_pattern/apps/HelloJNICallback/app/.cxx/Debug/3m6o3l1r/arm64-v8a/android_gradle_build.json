@@ -1,0 +1,38 @@
+{
+  "buildFiles": [
+    "/home/paocela/AndroidStudioProjects/HelloJNICallback/app/src/main/cpp/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/home/paocela/Android/Sdk/cmake/3.18.1/bin/ninja",
+      "-C",
+      "/home/paocela/AndroidStudioProjects/HelloJNICallback/app/.cxx/Debug/3m6o3l1r/arm64-v8a",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/home/paocela/Android/Sdk/cmake/3.18.1/bin/ninja",
+    "-C",
+    "/home/paocela/AndroidStudioProjects/HelloJNICallback/app/.cxx/Debug/3m6o3l1r/arm64-v8a",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {
+    "hello-jnicallback::@6890427a1f51a3e7e1df": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "hello-jnicallback",
+      "output": "/home/paocela/AndroidStudioProjects/HelloJNICallback/app/build/intermediates/cxx/Debug/3m6o3l1r/obj/arm64-v8a/libhello-jnicallback.so",
+      "runtimeFiles": []
+    }
+  },
+  "toolchains": {
+    "toolchain": {
+      "cCompilerExecutable": "/home/paocela/Android/Sdk/ndk/22.1.7171670/toolchains/llvm/prebuilt/linux-x86_64/bin/clang.lld",
+      "cppCompilerExecutable": "/home/paocela/Android/Sdk/ndk/22.1.7171670/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++.lld"
+    }
+  },
+  "cFileExtensions": [
+    "c"
+  ],
+  "cppFileExtensions": []
+}

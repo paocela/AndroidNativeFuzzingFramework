@@ -1,0 +1,3 @@
+ninja: Entering directory `/home/paocela/AndroidStudioProjects/HelloJNICallback/app/.cxx/Debug/3q592b60/x86_64'
+[1/2] Building C object CMakeFiles/hello-jnicallback.dir/hello-jnicallback.c.o
+[2/2] Linking C shared library /home/paocela/AndroidStudioProjects/HelloJNICallback/app/build/intermediates/cxx/Debug/3q592b60/obj/x86_64/libhello-jnicallback.so

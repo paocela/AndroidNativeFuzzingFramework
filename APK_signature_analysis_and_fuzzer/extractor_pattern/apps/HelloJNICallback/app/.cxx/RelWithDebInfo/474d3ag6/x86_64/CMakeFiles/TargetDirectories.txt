@@ -1,0 +1,3 @@
+/home/paocela/AndroidStudioProjects/HelloJNICallback/app/.cxx/RelWithDebInfo/474d3ag6/x86_64/CMakeFiles/rebuild_cache.dir
+/home/paocela/AndroidStudioProjects/HelloJNICallback/app/.cxx/RelWithDebInfo/474d3ag6/x86_64/CMakeFiles/edit_cache.dir
+/home/paocela/AndroidStudioProjects/HelloJNICallback/app/.cxx/RelWithDebInfo/474d3ag6/x86_64/CMakeFiles/hello-jnicallback.dir
