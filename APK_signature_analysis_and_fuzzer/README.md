@@ -4,8 +4,22 @@ Fuzzing framework to target native components of Android APK, either targeting a
 
 ## Requirements
 * Android devices must be rooted
+
 * All Android devices must have a built version of *AFLplusplus-AndroidPatches* (get it from [here](https://github.com/paocela/AFLplusplus-AndroidPatches))
+
 * **jadx** built from source
+
+* to use only after running the script `analyze_native_signatures.sh`: this guarantees that `/target_APK` folder structure is (for each app):
+
+  ```
+  ├── target_APK
+  │ 	├── App-Name
+  │   │	├── base 
+  │   │	├── lib
+  │   │	├── base.apk
+  │   │	└── signatures_pattern.txt
+  │   └── ...
+  ```
 
 ## Usage
 
@@ -60,12 +74,24 @@ Options:
 ```
 .
 ├── extractor_pattern
+│ 	├── com.qdox.jar
+│ 	├── extractor.java
+│ 	├── extract_patter_native.sh
+│ 	└── README.md
 ├── fuzz_dir
 ├── fuzz_input
 ├── fuzz_output
 ├── harnesses
+│ 	├── harness_int:string_string_string.cpp
+│   └── ...
 ├── jadx
 ├── target_APK
+│ 	├── App-Name
+│   │	├── base 
+│   │	├── lib
+│   │	├── base.apk
+│   │	└── signatures_pattern.txt
+│   └── ...
 ├── analyze_native_signatures.sh
 ├── fuzzing_driver.sh
 ├── fuzzing_one.sh
@@ -81,9 +107,9 @@ Options:
 * **/harnesses**: contains previously written harnesses for some function signatures
 * **/jadx**: Java decompiler
 * **/target_APK**: folder containing APK under analysis
-* **analyze_native_signature.sh**: driver to call extractor framework (*/extractor_pattern*)
-* **fuzzing_driver.sh**: fuzzing driver to fuzz all native methods contained in *target_APK* apps with given signature
-* **fuzzing_one.sh**: fuzzing driver to fuzz a single method contained in target_APK app
+* **analyze_native_signature.sh**: driver to call extractor framework (`/extractor_pattern`)
+* **fuzzing_driver.sh**: fuzzing driver to fuzz all native methods contained in `/target_APK` apps with given signature
+* **fuzzing_one.sh**: fuzzing driver to fuzz a single method contained in `/target_APK` app
 * **harness.cpp**: harness source file, should be populated depending on the target function signature
 * **harness.h**: harness source file header
 * **README.md**: this README

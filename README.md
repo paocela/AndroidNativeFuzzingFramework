@@ -1,16 +1,32 @@
 # Fuzz Android Native Components on Phone Cluster
 
-Framework built to fuzz on multiple devices one or a set of functions part of the native component of an Android APK
+Framework built to fuzz on multiple devices one or a set of functions, which are part of the native component of an Android APK
 Devices are connect to the central machine over the same network, using ADB
 
 ## Requirements
 * All Android devices must be rooted
+
 * All Android devices must be have a connection with the central machine through ADB. Steps (source [here](https://stackoverflow.com/questions/43973838/how-to-connect-multiple-android-devices-with-adb-over-wifi)):
   1. connect device with USB cable to PC
   2. `adb -d tcpip 5555`
   3. `adb connect <device_ip_addr>`
   4. repeat for all other devices
+  
 * All Android devices must have a built version of *AFLplusplus-AndroidPatches* (get it from [here](https://github.com/paocela/AFLplusplus-AndroidPatches))
+
+* to use only after running the script `analyze_native_signatures.sh` in folder `/APK_signature_analysis_and_fuzzer`: this guarantees that `/target_APK` folder structure is (for each app):
+
+  ```
+  ├── target_APK
+  │ 	├── App-Name
+  │   │	├── base 
+  │   │	├── lib
+  │   │	├── base.apk
+  │   │	└── signatures_pattern.txt
+  │   └── ...
+  ```
+
+  
 
 ## Usage
 
