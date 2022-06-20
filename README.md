@@ -34,7 +34,7 @@ Devices are connect to the central machine over the same network, using ADB
   │   └── ...
   ```
 
-  
+* `APK_signature_analysis_and_fuzzer/harness.cpp` written based on the target choice
 
 ## Usage
 

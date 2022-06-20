@@ -29,6 +29,8 @@ Fuzzing framework to target native components of Android APK, either targeting a
   │   └── ...
   ```
 
+* `harness.cpp` written based on the target choice
+
 ## Usage
 
 ### analyze_native_signature.sh
@@ -83,6 +85,13 @@ Options:
    <read-from-file>: flag to specify if fuzzer will read from file or from stdin (depending on how harness is implemented)
    <AFL_DEBUG[0|1]>: set if you want to debug AFL++
 ```
+
+### Steps to write harness
+
+1. modify target function signature (`harness.cpp:21`)
+2. write harness (`harness.cpp:84`)
+   1. read data from `stdin` or file
+   2. call target function
 
 ## Components
 
