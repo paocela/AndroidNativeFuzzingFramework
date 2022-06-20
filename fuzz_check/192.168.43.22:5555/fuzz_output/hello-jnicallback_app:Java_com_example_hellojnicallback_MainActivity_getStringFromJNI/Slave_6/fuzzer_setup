@@ -1,4 +1,0 @@
-# environment variables:
-AFL_KILL_SIGNAL=9
-# command line:
-'afl-fuzz' '-i' '../fuzz_input' '-o' '../fuzz_output/hello-jnicallback_app:Java_com_example_hellojnicallback_MainActivity_getStringFromJNI' '-S' 'Slave_6' '--' './../harness' '/data/data/com.termux/files/home/APK_signature_analysis_and_fuzzer/fuzz_dir/../target_APK/hello-jnicallback_app/' 'Java_com_example_hellojnicallback_MainActivity_getStringFromJNI' '@@'
