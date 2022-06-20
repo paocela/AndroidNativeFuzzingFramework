@@ -15,7 +15,7 @@ NC='\033[0m'
 Help()
 {
    # Display Help
-   echo "Syntax: ./fuzzing_driver <signature-chosen> <time-to-fuzz> <input-dir> <output-dir> <read-from-file[0|1]> <AFL_DEBUG[0|1]>" 
+   echo "Syntax: ./fuzzing_driver <signature-chosen> <time-to-fuzz> <input-dir> <output-dir> <read-from-file[0|1]> <AFL_DEBUG[0|1]> <parallel-fuzzing[0|1]>" 
    echo 
    echo "Fuzz native methods of different APKs with given signature"
    echo
@@ -27,6 +27,7 @@ Help()
    echo "	<output-dir>: fuzzing output directory name"
    echo "	<read-from-file>: flag to specify if fuzzer will read from file or from stdin (depending on how harness is implemented)"
    echo "	<AFL_DEBUG[0|1]>: set if you want to debug AFL++"
+   echo "	<parallel-fuzzing[0...#max_cores]>: set if you want to run parallel fuzzing campaigns on all available cores"
    echo
 }
 
@@ -47,6 +48,7 @@ Fuzz()
 	FUZZ_OUTPUT_DIR=$4
 	READ_FROM_FILE=$5
 	AFL_DEBUG_FLAG=$6
+	PARALLEL_FUZZING=$7
 
 	# add AFL++ to path
 	export PATH=$PATH_TO_AFL:$PATH_TO_TERMUX_BIN:$PATH
@@ -64,6 +66,12 @@ Fuzz()
 	# set AFL_DEBUG if needed
 	if [ "$AFL_DEBUG_FLAG" = "1" ] ; then
 		export AFL_DEBUG=1
+	fi
+
+	# set up number cores
+	NUM_CORES=$(nproc --all)
+	if [ $PARALLEL_FUZZING -lt $NUM_CORES ] ; then
+		NUM_CORES=$PARALLEL_FUZZING
 	fi
 
 	FUZZ_ERROR=""
@@ -84,29 +92,60 @@ Fuzz()
 		export LD_PRELOAD="/data/data/com.termux/files/usr/lib/libc++_shared.so"
 		export LD_LIBRARY_PATH="/apex/com.android.art/lib64:$(pwd)/$APP_PATH/lib/arm64-v8a:/system/lib64"
 		cd fuzz_dir
-		if [ "$READ_FROM_FILE" = "1" ] ; then
-			# fuzzer feed input trough file
-			timeout $TIME_TO_FUZZ afl-fuzz -i "../$FUZZ_INPUT_DIR" -o "../$FUZZ_OUTPUT_DIR/$APP:$METHOD" -- ./../harness "$(pwd)/../$APP_PATH" $METHOD @@
+		if [ $PARALLEL_FUZZING -gt 0 ] ; then
+			for IDX in $(seq 1 $NUM_CORES) ; do
+				echo -e "${GREEN}[LOG]${NC} Starting fuzzer on core #$IDX\n"
+				if [ "$READ_FROM_FILE" = "1" ] ; then
+					# fuzzer feed input trough file
+					if [ $IDX -eq 1 ] ; then
+						nohup timeout $TIME_TO_FUZZ afl-fuzz -i "../$FUZZ_INPUT_DIR" -o "../$FUZZ_OUTPUT_DIR/$APP:$METHOD" -M "Master" -- ./../harness "$(pwd)/../$APP_PATH" $METHOD @@  > /dev/null &
+					else
+						nohup timeout $TIME_TO_FUZZ afl-fuzz -i "../$FUZZ_INPUT_DIR" -o "../$FUZZ_OUTPUT_DIR/$APP:$METHOD" -S "Slave_$IDX" -- ./../harness "$(pwd)/../$APP_PATH" $METHOD @@  > /dev/null &
+					fi
 
-			# check if fuzzer was able to fuzz
-			STATUS=$?
-			if [ $STATUS -ne 124 ] ; then
-				echo -e "${RED}[ERR]${NC} Fuzzer unable to fuzz $APP\n"
-				FUZZ_ERROR+="	$APP - $METHOD\n"
-			else
-				echo -e "${GREEN}[LOG]${NC} Done fuzzing $APP\n"
-			fi
-		else
-			# fuzzer feed input through stdin
-			timeout $TIME_TO_FUZZ afl-fuzz -i "../$FUZZ_INPUT_DIR" -o "../$FUZZ_OUTPUT_DIR/$APP:$METHOD" -- ./../harness "$(pwd)/../$APP_PATH" $METHOD
+					# in this case can't check if fuzzing was successful as both nohup and AFL++_failing return 0
+					if [ $IDX -eq 1 ] ; then
+						echo -e "${GREEN}[LOG]${NC} Done fuzzing $APP\n"
+					fi
+				else
+					# fuzzer feed input through stdin
+					if [ $IDX -eq 1 ] ; then
+						nohup timeout $TIME_TO_FUZZ afl-fuzz -i "../$FUZZ_INPUT_DIR" -o "../$FUZZ_OUTPUT_DIR/$APP:$METHOD" -M "Master" -- ./../harness "$(pwd)/../$APP_PATH" $METHOD  > /dev/null &
+					else
+						nohup timeout $TIME_TO_FUZZ afl-fuzz -i "../$FUZZ_INPUT_DIR" -o "../$FUZZ_OUTPUT_DIR/$APP:$METHOD" -S "Slave_$IDX" -- ./../harness "$(pwd)/../$APP_PATH" $METHOD  > /dev/null &
+					fi
+					
+					# in this case can't check if fuzzing was successful as both nohup and AFL++_failing return 0
+					if [ $IDX -eq 1 ] ; then
+						echo -e "${GREEN}[LOG]${NC} Done fuzzing $APP\n"
+					fi
+				fi
+			done
+		else 
+			if [ "$READ_FROM_FILE" = "1" ] ; then
+				# fuzzer feed input trough file
+				timeout $TIME_TO_FUZZ afl-fuzz -i "../$FUZZ_INPUT_DIR" -o "../$FUZZ_OUTPUT_DIR/$APP:$METHOD" -- ./../harness "$(pwd)/../$APP_PATH" $METHOD @@
 
-			# check if fuzzer was able to fuzz
-			STATUS=$?
-			if [ $STATUS -ne 124 ] ; then
-				echo -e "${RED}[ERR]${NC} Fuzzer unable to fuzz $APP\n"
-				FUZZ_ERROR+="	$APP - $METHOD\n"
+				# check if fuzzer was able to fuzz
+				STATUS=$?
+				if [ $STATUS -ne 124 ] ; then
+					echo -e "${RED}[ERR]${NC} Fuzzer unable to fuzz $APP\n"
+					FUZZ_ERROR+="	$APP - $METHOD\n"
+				else
+					echo -e "${GREEN}[LOG]${NC} Done fuzzing $APP\n"
+				fi
 			else
-				echo -e "${GREEN}[LOG]${NC} Done fuzzing $APP\n"
+				# fuzzer feed input through stdin
+				timeout $TIME_TO_FUZZ afl-fuzz -i "../$FUZZ_INPUT_DIR" -o "../$FUZZ_OUTPUT_DIR/$APP:$METHOD" -- ./../harness "$(pwd)/../$APP_PATH" $METHOD
+
+				# check if fuzzer was able to fuzz
+				STATUS=$?
+				if [ $STATUS -ne 124 ] ; then
+					echo -e "${RED}[ERR]${NC} Fuzzer unable to fuzz $APP\n"
+					FUZZ_ERROR+="	$APP - $METHOD\n"
+				else
+					echo -e "${GREEN}[LOG]${NC} Done fuzzing $APP\n"
+				fi
 			fi
 		fi
 		cd ..
@@ -136,11 +175,11 @@ if [ "$#" -eq 0 ] ; then
 elif [ "$1" == "-h" ] || [ "$1" == "--help" ]; then
     Help
     exit 0
-elif [ "$#" -ne 6 ] ; then
+elif [ "$#" -ne 7 ] ; then
     echo "Error usage..."
     Help
     exit 1
 else
-    Fuzz $1 $2 $3 $4 $5 $6
+    Fuzz $1 $2 $3 $4 $5 $6 $7
     exit 0
 fi

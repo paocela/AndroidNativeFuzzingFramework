@@ -34,7 +34,7 @@ Fuzzing framework to target native components of Android APK, either targeting a
 ### analyze_native_signature.sh
 
 ```
-Syntax: ./analyze_native_signatures [-h] [qdox|grep]
+Syntax: ./analyze_native_signatures.sh [-h] [qdox|grep]
 
 Analyze APK native methods signatures, group by and count them
 

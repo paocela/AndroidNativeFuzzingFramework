@@ -1,0 +1,4 @@
+./../harness
+/data/data/com.termux/files/home/APK_signature_analysis_and_fuzzer/fuzz_dir/../target_APK/hello-jnicallback_app/
+Java_com_example_hellojnicallback_MainActivity_getStringFromJNI
+@@
