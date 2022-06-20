@@ -89,19 +89,19 @@ Options:
 ```
 .
 ├── extractor_pattern/
-│ 	├── com.qdox.jar
-│ 	├── extractor.java
-│ 	├── extract_patter_native.sh
-│ 	└── README.md
+│   ├── com.qdox.jar
+│   ├── extractor.java
+│   ├── extract_patter_native.sh
+│   └── README.md
 ├── fuzz_dir/
 ├── fuzz_input/
 ├── fuzz_output/
 ├── harnesses/
-│ 	├── harness_int:string_string_string.cpp
+│   ├── harness_int:string_string_string.cpp
 │   └── ...
 ├── jadx/
 ├── target_APK/
-│ 	├── App-Name/
+│   ├── App-Name/
 │   │	├── base/
 │   │	├── lib/
 │   │	├── base.apk

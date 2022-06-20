@@ -17,6 +17,13 @@ Devices are connect to the central machine over the same network, using ADB
 * to use only after running the script `analyze_native_signatures.sh` in folder `/APK_signature_analysis_and_fuzzer`: this guarantees that `/target_APK` folder structure is (for each app):
 
   ```
+  ## Before Analysis ##
+  ├── target_APK/
+  │   ├── App-Name/
+  │   │	└── base.apk
+  │   └── ...
+  
+  ## After Analysis ##
   ├── target_APK/
   │   ├── App-Name/
   │   │	├── base/
