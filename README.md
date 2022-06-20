@@ -17,10 +17,11 @@ Devices are connect to the central machine over the same network, using ADB
 * to use only after running the script `analyze_native_signatures.sh` in folder `/APK_signature_analysis_and_fuzzer`: this guarantees that `/target_APK` folder structure is (for each app):
 
   ```
-  ├── target_APK
-  │ 	├── App-Name
-  │   │	├── base 
-  │   │	├── lib
+  ├── target_APK/
+  │   ├── App-Name/
+  │   │	├── base/
+  │   │	├── lib/
+  │   │   │   └── arm64-v8a/
   │   │	├── base.apk
   │   │	└── signatures_pattern.txt
   │   └── ...
@@ -53,8 +54,8 @@ optional arguments:
 
 ```
 .
-├── APK_signature_analysis_and_fuzzer
-├── Root-Samsung-A40
+├── APK_signature_analysis_and_fuzzer/
+├── Root-Samsung-A40/
 ├── adb.py
 ├── fuzzing_manager.py
 └── README.md

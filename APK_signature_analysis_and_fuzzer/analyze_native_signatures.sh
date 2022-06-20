@@ -14,6 +14,13 @@ Help()
    echo
    echo "Analyze APK native methods signatures, group by and count them"
    echo
+   echo "Requirements:"
+   echo "   - target_APK folder structure:"
+   echo "      ├── target_APK/"
+   echo "      │   ├── App-Name/"
+   echo "      │   │	  └── base.apk"
+   echo "      │   └── ..."
+   echo
    echo "Options:"
    echo "   -h, --help     Print this Help."
    echo "   [qdox|grep]    Choose static analysis method (only qdox implemented, it's more precise)"
@@ -42,6 +49,21 @@ Analyze()
 		APP_NAME=$(echo $TARGET_DIR | cut -d "/" -f 3)
 
 		echo -e "${GREEN}[LOG]${NC} Analyzing $APP_NAME ($CURRENT_NUM_APK/$TOTAL_NUM_APK)"
+
+		## extract /lib folder (for harness usage later on) ##
+
+		cp "$TARGET_DIR/base.apk" "$TARGET_DIR/base.zip"
+		unzip -q "$TARGET_DIR/base.zip" -d "$TARGET_DIR/base_apk"
+		if [ -d "$TARGET_DIR/base_apk/lib/arm64-v8a" ] ; then
+			mv "$TARGET_DIR/base_apk/lib/" "$TARGET_DIR"
+		elif [ -d "$TARGET_DIR/base_apk/lib/arm64" ] ; then
+			mv "$TARGET_DIR/base_apk/lib/arm64" "$TARGET_DIR/base_apk/lib/arm64-v8a"
+			mv "$TARGET_DIR/base_apk/lib/" "$TARGET_DIR"
+		else
+			echo -e "${RED}[ERR]${NC} App $APP_NAME either not native or APK doesn't provide arm64 version of libraries"
+		fi
+		rm "$TARGET_DIR/base.zip"
+		rm -rf "$TARGET_DIR/base_apk"
 
 		## decompile apk ##
 		

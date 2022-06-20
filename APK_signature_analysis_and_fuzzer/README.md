@@ -12,10 +12,18 @@ Fuzzing framework to target native components of Android APK, either targeting a
 * to use only after running the script `analyze_native_signatures.sh`: this guarantees that `/target_APK` folder structure is (for each app):
 
   ```
-  ├── target_APK
-  │ 	├── App-Name
-  │   │	├── base 
-  │   │	├── lib
+  ## Before Analysis ##
+  ├── target_APK/
+  │   ├── App-Name/
+  │   │	└── base.apk
+  │   └── ...
+  
+  ## After Analysis ##
+  ├── target_APK/
+  │   ├── App-Name/
+  │   │	├── base/
+  │   │	├── lib/
+  │   │   │   └── arm64-v8a/
   │   │	├── base.apk
   │   │	└── signatures_pattern.txt
   │   └── ...
@@ -29,6 +37,13 @@ Fuzzing framework to target native components of Android APK, either targeting a
 Syntax: ./analyze_native_signatures [-h] [qdox|grep]
 
 Analyze APK native methods signatures, group by and count them
+
+Requirements:
+   - target_APK folder structure:
+      ├── target_APK/
+      │   ├── App-Name/
+      │   │	  └── base.apk
+      │   └── ...
 
 Options:
    -h, --help     Print this Help.
@@ -73,22 +88,22 @@ Options:
 
 ```
 .
-├── extractor_pattern
+├── extractor_pattern/
 │ 	├── com.qdox.jar
 │ 	├── extractor.java
 │ 	├── extract_patter_native.sh
 │ 	└── README.md
-├── fuzz_dir
-├── fuzz_input
-├── fuzz_output
-├── harnesses
+├── fuzz_dir/
+├── fuzz_input/
+├── fuzz_output/
+├── harnesses/
 │ 	├── harness_int:string_string_string.cpp
 │   └── ...
-├── jadx
-├── target_APK
-│ 	├── App-Name
-│   │	├── base 
-│   │	├── lib
+├── jadx/
+├── target_APK/
+│ 	├── App-Name/
+│   │	├── base/
+│   │	├── lib/
 │   │	├── base.apk
 │   │	└── signatures_pattern.txt
 │   └── ...
