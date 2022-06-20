@@ -89,7 +89,7 @@ if __name__ == "__main__":
     parser.add_argument("--target", type=str, required=False, help="Fuzzing target signature or method, e.g. String:String,Int, or Java_... (depending on --action)")
     parser.add_argument("--fuzz_time", type=str, required=False, help="Time to fuzz for, of type float[s|m|h|d] (s=seconds, m=minutes, h=hours, d=days)")
     parser.add_argument("--from_stdin", type=bool, required=False, default=False, help="If True, harness get AFL++ input from stdin")
-    parser.add_argument("--parallel_fuzzing", type=int, required=False, default=0, help="Specify number N of cores on which to run parallel campaings (if N > #cores, then max #cores is used)")
+    parser.add_argument("--parallel_fuzzing", type=int, required=False, default=0, help="Specify number N of cores to use for a parallel fuzzing campaign (if N > #cores, then max #cores is used)")
 
     args = parser.parse_args()
 

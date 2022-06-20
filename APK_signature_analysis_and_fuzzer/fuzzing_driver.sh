@@ -27,7 +27,7 @@ Help()
    echo "	<output-dir>: fuzzing output directory name"
    echo "	<read-from-file>: flag to specify if fuzzer will read from file or from stdin (depending on how harness is implemented)"
    echo "	<AFL_DEBUG[0|1]>: set if you want to debug AFL++"
-   echo "	<parallel-fuzzing[0...#max_cores]>: set if you want to run parallel fuzzing campaigns on all available cores"
+   echo "	<parallel-fuzzing[0...#max_cores]>: Specify number N of cores to use for a parallel fuzzing campaign (if N > #cores, then max #cores is used)"
    echo
 }
 

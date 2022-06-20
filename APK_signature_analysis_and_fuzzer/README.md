@@ -67,6 +67,7 @@ Options:
    <output-dir>: fuzzing output directory name
    <read-from-file>: flag to specify if fuzzer will read from file or from stdin (depending on how harness is implemented)
    <AFL_DEBUG[0|1]>: set if you want to debug AFL++
+   <parallel-fuzzing[0...#max_cores]>: Specify number N of cores to use for a parallel fuzzing campaign (if N > #cores, then max #cores is used)
 ```
 
 ### fuzzing_one.sh

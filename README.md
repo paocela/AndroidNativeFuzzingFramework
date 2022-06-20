@@ -40,7 +40,8 @@ Devices are connect to the central machine over the same network, using ADB
 
 ```
 python fuzzing_manager.py [-h] --action {fuzz_signature,fuzz_one,check} [--target TARGET]
-                          [--fuzz_time FUZZ_TIME] [--from_stdin FROM_STDIN]
+                          [--fuzz_time FUZZ_TIME] [--from_stdin FROM_STDIN] [--parallel_fuzzing PARALLEL_FUZZING]
+
 
 Fuzz Android native libraries functions with given signature on multiple devices through ADB
 
@@ -55,6 +56,8 @@ optional arguments:
                         d=days)
   --from_stdin FROM_STDIN
                         If True, harness get AFL++ input from stdin
+  --parallel_fuzzing PARALLEL_FUZZING
+                        Specify number N of cores to use for a parallel fuzzing campaign (if N > #cores, then max #cores is used)
 ```
 
 ## Components
