@@ -4,6 +4,7 @@ import re
 import os
 import shutil
 from statistics import mean
+import re
 
 """ connect multiple devices over WIFI with ADB --> (source: https://stackoverflow.com/questions/43973838/how-to-connect-multiple-android-devices-with-adb-over-wifi)
 1. connect device with USB cable to PC
@@ -100,12 +101,25 @@ def check():
 
     print(f"{GREEN}[LOG] {NC}Done! (find all output in ./fuzz_check)")
 
+def kill_fuzzer():
+    print(f"{GREEN}[LOG] {NC}Fetching PIDs...")
+    ALL_PROC = execute_privileged_command("ps -ef | grep afl-fuzz | grep -v grep | grep -v timeout")[0].decode('utf-8').split("\n")[:-1]
+    ALL_PROC = list(map(lambda x: re.sub("\s+", " ", x).split(" ")[1], ALL_PROC))
+    if not ALL_PROC:
+        print(f"{YELLOW}[WRN] {NC}No running fuzzers found (you sure?)")
+        return
+    for P in ALL_PROC:
+        execute_privileged_command("kill -9 " + P)
+        print(f"{GREEN}[LOG] {NC}Killed {P}")
+    # then kill all pids
+    print(f"{GREEN}[LOG] {NC}Done!")
+
 
 if __name__ == "__main__":
     
     parser = argparse.ArgumentParser(description='Fuzz Android native libraries functions with given signature on multiple devices through ADB')
 
-    parser.add_argument("--action", type=str, choices=["fuzz_signature", "fuzz_one", "check"], required=True, help="*fuzz* to fuzz on multiple devices, *check* to check on each fuzzing campaing")
+    parser.add_argument("--action", type=str, choices=["fuzz_signature", "fuzz_one", "check", "kill_fuzzer"], required=True, help="*fuzz* to fuzz on multiple devices, *check* to check on each fuzzing campaing")
     parser.add_argument("--target", type=str, required=False, help="Fuzzing target signature or method, e.g. String:String,Int, or Java_... (depending on --action)")
     parser.add_argument("--fuzz_time", type=str, required=False, help="Time to fuzz for, of type float[s|m|h|d] (s=seconds, m=minutes, h=hours, d=days)")
     parser.add_argument("--from_stdin", type=bool, required=False, default=False, help="If True, harness get AFL++ input from stdin")
@@ -133,6 +147,8 @@ if __name__ == "__main__":
 
     elif args.action == "check":
         check()
+    elif args.action == "kill_fuzzer":
+        kill_fuzzer()
     else:
         print(3)
         parser.print_help()
