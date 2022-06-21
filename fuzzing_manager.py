@@ -3,6 +3,7 @@ import argparse
 import re
 import os
 import shutil
+from statistics import mean
 
 """ connect multiple devices over WIFI with ADB --> (source: https://stackoverflow.com/questions/43973838/how-to-connect-multiple-android-devices-with-adb-over-wifi)
 1. connect device with USB cable to PC
@@ -68,16 +69,34 @@ def fuzz_one(method, fuzz_time, from_stdin, parallel_fuzzing):
 
 def check():
     print(f"{GREEN}[LOG] {NC}Pulling fuzzing output directory...")
-    os.makedirs("./fuzz_check", exist_ok=True)
+    shutil.rmtree('./fuzz_check')
+    os.makedirs("./fuzz_check")
     for device_id in get_device_ids():
         os.makedirs("./fuzz_check/" + device_id.decode('utf-8'), exist_ok=True)
         pull_privileged(HOME_DIRECTORY + HARNESS_FOLDER + "fuzz_output", "./fuzz_check/" + device_id.decode('utf-8'), is_directory=True, device_id=device_id)
 
+        # show stats
+        # total number crashes
         for target_function in os.listdir("./fuzz_check/" + device_id.decode('utf-8') + "/fuzz_output"):
             NUM_CRASHES = 0
+            EXEC_PER_SEC = []
+            RUNTIME = 0
             for core_output in os.listdir("./fuzz_check/" + device_id.decode('utf-8') + "/fuzz_output/" + target_function):
+                # number crashes per core
                 NUM_CRASHES += len([name for name in os.listdir("./fuzz_check/" + device_id.decode('utf-8') + "/fuzz_output/" + target_function + "/" + core_output + '/crashes/') if os.path.isfile(name)])
-            print(f"{YELLOW}[STATS] {NC}Function:{target_function} - Device:{device_id.decode('utf-8')} --> found {NUM_CRASHES} crashes")
+
+                # number execs per core
+                f = open("./fuzz_check/" + device_id.decode('utf-8') + "/fuzz_output/" + target_function + "/" + core_output + "/fuzzer_stats")
+                lines = f.readlines()
+                EXEC_PER_SEC.append(float(lines[7].split(":")[-1]))
+
+                # total runtime in seconds
+                RUNTIME = int(lines[2].split(":")[-1])
+                
+            print(f"{YELLOW}[STATS] {NC}Function:{target_function} - Device:{device_id.decode('utf-8')}")
+            print(f"   ├── #crashes = {NUM_CRASHES}")
+            print(f"   ├── runtime (sec) = {RUNTIME}")
+            print(f"   └── exec/s = {EXEC_PER_SEC} (avg = {mean(EXEC_PER_SEC)})")
 
     print(f"{GREEN}[LOG] {NC}Done! (find all output in ./fuzz_check)")
 
@@ -97,7 +116,7 @@ if __name__ == "__main__":
     if args.action == "fuzz_signature" or args.action == "fuzz_one":
 
         # zip harness folder directory
-        shutil.make_archive(HARNESS_FOLDER, 'zip', HARNESS_FOLDER)
+        shutil.make_archive(HARNESS_FOLDER, 'zip', ".", HARNESS_FOLDER)
 
         # time safety check
         time_pattern = re.compile("^[0-9]+[smhd]+$")
