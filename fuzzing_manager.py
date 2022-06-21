@@ -101,17 +101,24 @@ def check():
 
     print(f"{GREEN}[LOG] {NC}Done! (find all output in ./fuzz_check)")
 
-def kill_fuzzer():
-    print(f"{GREEN}[LOG] {NC}Fetching PIDs...")
-    ALL_PROC = execute_privileged_command("ps -ef | grep afl-fuzz | grep -v grep | grep -v timeout")[0].decode('utf-8').split("\n")[:-1]
-    ALL_PROC = list(map(lambda x: re.sub("\s+", " ", x).split(" ")[1], ALL_PROC))
-    if not ALL_PROC:
-        print(f"{YELLOW}[WRN] {NC}No running fuzzers found (you sure?)")
-        return
-    for P in ALL_PROC:
-        execute_privileged_command("kill -9 " + P)
-        print(f"{GREEN}[LOG] {NC}Killed {P}")
-    # then kill all pids
+def kill_fuzzer(target):
+    TARGETS = []
+    if (target is None):
+        TARGETS = list(map(lambda x: x.decode('utf-8'), get_device_ids()))
+    else:
+        TARGETS.append(target)
+
+    for device_id in TARGETS:
+        print(f"{GREEN}[LOG] {NC}Fetching PIDs...")
+        ALL_PROC = execute_privileged_command("ps -ef | grep afl-fuzz | grep -v grep | grep -v timeout", device_id=device_id)[0].decode('utf-8').split("\n")[:-1]
+        ALL_PROC = list(map(lambda x: re.sub("\s+", " ", x).split(" ")[1], ALL_PROC))
+        if not ALL_PROC:
+            print(f"{YELLOW}[WRN] {NC}No running fuzzers found (you sure?)")
+            return
+        for P in ALL_PROC:
+            execute_privileged_command("kill -9 " + P, device_id=device_id)
+            print(f"{GREEN}[LOG] {NC}Killed {P}")
+        
     print(f"{GREEN}[LOG] {NC}Done!")
 
 
@@ -119,8 +126,8 @@ if __name__ == "__main__":
     
     parser = argparse.ArgumentParser(description='Fuzz Android native libraries functions with given signature on multiple devices through ADB')
 
-    parser.add_argument("--action", type=str, choices=["fuzz_signature", "fuzz_one", "check", "kill_fuzzer"], required=True, help="*fuzz* to fuzz on multiple devices, *check* to check on each fuzzing campaing")
-    parser.add_argument("--target", type=str, required=False, help="Fuzzing target signature or method, e.g. String:String,Int, or Java_... (depending on --action)")
+    parser.add_argument("--action", type=str, choices=["fuzz_signature", "fuzz_one", "check", "kill_fuzzer"], required=True, help="*fuzz_signature* to fuzz all functions given a signature, *fuzz_one* to fuzz given function name, *check* to check on each fuzzing campaing, *kill_fuzzer* to kill all or devices running campaigns")
+    parser.add_argument("--target", type=str, required=False, help="Fuzzing target signature or method, or device to kill, e.g. String:String,Int, or Java_... or 192.168... (depending on --action)")
     parser.add_argument("--fuzz_time", type=str, required=False, help="Time to fuzz for, of type float[s|m|h|d] (s=seconds, m=minutes, h=hours, d=days)")
     parser.add_argument("--from_stdin", type=bool, required=False, default=False, help="If True, harness get AFL++ input from stdin")
     parser.add_argument("--parallel_fuzzing", type=int, required=False, default=0, help="Specify number N of cores to use for a parallel fuzzing campaign (if N > #cores, then max #cores is used)")
@@ -148,7 +155,7 @@ if __name__ == "__main__":
     elif args.action == "check":
         check()
     elif args.action == "kill_fuzzer":
-        kill_fuzzer()
+        kill_fuzzer(args.target)
     else:
         print(3)
         parser.print_help()

@@ -9,7 +9,7 @@ Devices are connect to the central machine over the same network, using ADB
 * All Android devices must be have a connection with the central machine through ADB. Steps (source [here](https://stackoverflow.com/questions/43973838/how-to-connect-multiple-android-devices-with-adb-over-wifi)):
   1. connect device with USB cable to PC
   2. `adb -d tcpip 5555`
-  3. `adb connect <device_ip_addr>`
+  3. `adb connect <device_ip_addr>` and remove USB cable
   4. repeat for all other devices
   
 * All Android devices must have a built version of *AFLplusplus-AndroidPatches* (get it from [here](https://github.com/paocela/AFLplusplus-AndroidPatches))
@@ -48,9 +48,9 @@ Fuzz Android native libraries functions with given signature on multiple devices
 optional arguments:
   -h, --help            show this help message and exit
   --action {fuzz_signature,fuzz_one,check}
-                        *fuzz* to fuzz on multiple devices, *check* to check on each fuzzing campaing
-  --target TARGET       Fuzzing target signature or method, e.g. String:String,Int, or Java_...
-                        (depending on --action)
+                        *fuzz_signature* to fuzz all functions given a signature, *fuzz_one* to fuzz given function name, *check* to check on each fuzzing campaing,   *kill_fuzzer* to kill all or devices running campaigns
+  --target TARGET       
+                        Fuzzing target signature or method, or device to kill, e.g. String:String,Int, or Java_... or 192.168... (depending on --action)
   --fuzz_time FUZZ_TIME
                         Time to fuzz for, of type float[s|m|h|d] (s=seconds, m=minutes, h=hours,
                         d=days)
