@@ -2,6 +2,7 @@ from adb import *
 import argparse
 import re
 import os
+import shutil
 
 """ connect multiple devices over WIFI with ADB --> (source: https://stackoverflow.com/questions/43973838/how-to-connect-multiple-android-devices-with-adb-over-wifi)
 1. connect device with USB cable to PC
@@ -94,6 +95,11 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.action == "fuzz_signature" or args.action == "fuzz_one":
+
+        # zip harness folder directory
+        shutil.make_archive(HARNESS_FOLDER, 'zip', HARNESS_FOLDER)
+
+        # time safety check
         time_pattern = re.compile("^[0-9]+[smhd]+$")
         if (not time_pattern.match(args.fuzz_time)):
             parser.print_help()
@@ -102,6 +108,10 @@ if __name__ == "__main__":
                 fuzz_signature(args.target, args.fuzz_time, args.from_stdin, args.parallel_fuzzing)
             else:
                 fuzz_one(args.target, args.fuzz_time, args.from_stdin, args.parallel_fuzzing)
+
+        # remove zip folder
+        os.remove(HARNESS_FOLDER_ZIP)
+
     elif args.action == "check":
         check()
     else:
