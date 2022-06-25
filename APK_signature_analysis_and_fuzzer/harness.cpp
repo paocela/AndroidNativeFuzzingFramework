@@ -18,7 +18,7 @@ extern "C"
 	/***********************************/
 	/* MODIFY TARGET FUNCTION DEF HERE */
 	/***********************************/
-    typedef jstring function_t(JNIEnv *, jobject, jstring);
+    typedef void function_t(JNIEnv *, jobject, jstring);
 }
 
 /* globals definitions */
@@ -204,7 +204,7 @@ int findFunctionPtrSharedLib()
         if (!lib) 
         {
             std::cerr << dlerror() << std::endl;
-            abort();
+            continue;
         }
 
         targetFunctionPtr = (function_t *)dlsym(lib, targetFunctionName.c_str());
@@ -239,7 +239,7 @@ int findFunctionPtrSharedLib()
         if (!lib) 
         {
             std::cerr << dlerror() << std::endl;
-            abort();
+            continue;
         }
 
         JNI_OnLoadPtr = (JNI_OnLoad_t *)dlsym(lib, "JNI_OnLoad");

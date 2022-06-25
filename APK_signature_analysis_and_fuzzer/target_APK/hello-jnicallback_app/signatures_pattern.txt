@@ -1,3 +1,0 @@
-Java_com_example_hellojnicallback_MainActivity_StopTicks void:
-Java_com_example_hellojnicallback_MainActivity_getStringFromJNI String:String,
-Java_com_example_hellojnicallback_MainActivity_startTicks void:

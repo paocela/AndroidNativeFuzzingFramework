@@ -1,5 +1,7 @@
 #!/bin/bash
 
+## WHEN NOT RUN OVER ADB (for example over termux)
+
 ## output colors ##
 RED='\033[0;31m'
 YELLOW='\033[0;33m'

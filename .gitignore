@@ -1,3 +1,8 @@
 fuzz_check
 APK_signature_analysis_and_fuzzer.zip
 log.txt
+APK_signature_analysis_and_fuzzer/target_APK/**
+APK_signature_analysis_and_fuzzer/fuzz_input
+APK_signature_analysis_and_fuzzer/fuzz_output
+__pycache__
+APK_signature_analysis_and_fuzzer/signatures_all.txt

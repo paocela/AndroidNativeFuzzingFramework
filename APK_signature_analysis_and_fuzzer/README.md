@@ -7,7 +7,12 @@ Fuzzing framework to target native components of Android APK, either targeting a
 
 * All Android devices must have a built version of *AFLplusplus-AndroidPatches* (get it from [here](https://github.com/paocela/AFLplusplus-AndroidPatches))
 
-* **jadx** built from source
+* **jadx** built from source:
+
+  ```
+  cd jadx
+  ./gradlew dist
+  ```
 
 * to use only after running the script `analyze_native_signatures.sh`: this guarantees that `/target_APK` folder structure is (for each app):
 
