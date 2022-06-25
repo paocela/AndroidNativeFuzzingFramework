@@ -102,12 +102,12 @@ def check():
                     RUNTIME = int(lines[2].split(":")[-1])
                 except:
                     continue
-                
-            print(f"{YELLOW}[STATS] {NC}Function:{target_function} - Device:{device_id.decode('utf-8')}")
-            print(f"   ├── still running = {STILL_RUNNING}")
-            print(f"   ├── #crashes = {NUM_CRASHES} (unfortunately not unique)")
-            print(f"   ├── runtime (sec) = {RUNTIME}")
-            print(f"   └── exec/s = {EXEC_PER_SEC} (avg = {mean(EXEC_PER_SEC)})")
+            if RUNTIME != 0:  
+                print(f"{YELLOW}[STATS] {NC}Function:{target_function} - Device:{device_id.decode('utf-8')}")
+                print(f"   ├── still running = {STILL_RUNNING}")
+                print(f"   ├── #crashes = {NUM_CRASHES} (unfortunately not unique)")
+                print(f"   ├── runtime (sec) = {RUNTIME}")
+                print(f"   └── exec/s = {EXEC_PER_SEC} (avg = {mean(EXEC_PER_SEC)})")
 
     print(f"{GREEN}[LOG] {NC}Done! (find all output in ./fuzz_check)")
 
@@ -144,13 +144,16 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    if args.action == "fuzz_signature" or args.action == "fuzz_one":
+    print(f"{GREEN}[LOG] {NC}Starting...")
 
+    if args.action == "fuzz_signature" or args.action == "fuzz_one":
+        
         # zip harness folder directory
+        print(f"{GREEN}[LOG] {NC}Zipping APK_signature_analysis_and_fuzzer...")
         shutil.make_archive(HARNESS_FOLDER, 'zip', ".", HARNESS_FOLDER)
 
         # time safety check
-        time_pattern = re.compile("^[0-9]+[smhd]+$")
+        time_pattern = re.compile("^[+-]?([0-9]*[.])?[0-9]+[smhd]+$")
         if (not time_pattern.match(args.fuzz_time)):
             parser.print_help()
         else:

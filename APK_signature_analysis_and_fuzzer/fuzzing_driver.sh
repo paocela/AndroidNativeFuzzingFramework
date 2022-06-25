@@ -58,7 +58,7 @@ Fuzz()
 	echo -e "${GREEN}[LOG]${NC} Compiling harness" 
 	afl-clang++ --afl-classic -Wall -std=c++17 -Wl,--export-dynamic harness.cpp -o harness
 	unset LD_PRELOAD
-
+		
 	# fetch native methods with given signatures
 	# get apps name and methods name
 	grep -r --color -w --include "signatures_pattern.txt" -F "$SIGNATURE" "$TARGET_APK" > fuzzing_target_apps.txt
@@ -75,6 +75,7 @@ Fuzz()
 	fi
 
 	FUZZ_ERROR=""
+	FUZZ_OK=""
 
 	# loop for all
 	while read LINE; do
@@ -121,6 +122,8 @@ Fuzz()
 					fi
 				fi
 			done
+			# wait for each core to finish (without this, this script/driver will always start max number of cores)
+			sleep $TIME_TO_FUZZ
 		else 
 			if [ "$READ_FROM_FILE" = "1" ] ; then
 				# fuzzer feed input trough file
@@ -130,9 +133,10 @@ Fuzz()
 				STATUS=$?
 				if [ $STATUS -ne 124 ] ; then
 					echo -e "${RED}[ERR]${NC} Fuzzer unable to fuzz $APP\n"
-					FUZZ_ERROR+="	$APP - $METHOD\n"
+					FUZZ_ERROR+="$APP - $METHOD\n"
 				else
 					echo -e "${GREEN}[LOG]${NC} Done fuzzing $APP\n"
+					FUZZ_OK+="$APP - $METHOD\n"
 				fi
 			else
 				# fuzzer feed input through stdin
@@ -142,20 +146,16 @@ Fuzz()
 				STATUS=$?
 				if [ $STATUS -ne 124 ] ; then
 					echo -e "${RED}[ERR]${NC} Fuzzer unable to fuzz $APP\n"
-					FUZZ_ERROR+="	$APP - $METHOD\n"
+					FUZZ_ERROR+="$APP - $METHOD\n"
 				else
 					echo -e "${GREEN}[LOG]${NC} Done fuzzing $APP\n"
+					FUZZ_OK+="$APP - $METHOD\n"
 				fi
 			fi
 		fi
 		cd ..
 		
 	done < fuzzing_target_apps.txt
-
-	if [ -n "$FUZZ_ERROR" ] ; then
-		echo -e "${RED}[ERR]${NC} Couldn't fuzz the following apps: "
-		echo -e "$FUZZ_ERROR"
-	fi
 
 	# calculate stats
 	NUM_ALL_APPS=$(wc -l < fuzzing_target_apps.txt)
@@ -165,6 +165,12 @@ Fuzz()
 	
 	echo -e "${GREEN}[LOG]${NC} All done"
 	echo -e "	- find output in $FUZZ_OUTPUT_DIR directory"
+	if [ -n "$FUZZ_ERROR" ] ; then
+		echo -e "	- find list of apps-methods UNABLE to fuzz in fuzz_error.txt"
+		echo -e $FUZZ_ERROR > fuzz_error.txt
+	fi
+	echo -e "	- find list of apps-methods ABLE to fuzz in fuzz_ok.txt"
+	echo -e $FUZZ_OK > fuzz_ok.txt
 	echo -e "	- fuzzed $NUM_FUZZ_APPS / $NUM_ALL_APPS"
 }
 
