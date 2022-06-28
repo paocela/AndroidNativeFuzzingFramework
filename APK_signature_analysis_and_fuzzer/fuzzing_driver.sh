@@ -123,7 +123,11 @@ Fuzz()
 				fi
 			done
 			# wait for each core to finish (without this, this script/driver will always start max number of cores)
-			sleep $TIME_TO_FUZZ
+			sleep 10s
+			IS_FUZZING=$(ps -ef | grep afl-fuzz | grep -v grep)
+			if [ ! -z "$IS_FUZZING" ] ; then
+				sleep $TIME_TO_FUZZ
+			fi
 		else 
 			if [ "$READ_FROM_FILE" = "1" ] ; then
 				# fuzzer feed input trough file
