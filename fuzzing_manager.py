@@ -38,7 +38,7 @@ def fuzz_signature(sig, fuzz_time, from_stdin, parallel_fuzzing):
         # set PERFORMANCE to CPU frequency scaling
         print(f"{GREEN}[LOG] {NC}Setting CPU freq scaling to PERFORMANCE")
         execute_privileged_command("cd /sys/devices/system/cpu && echo performance | tee cpu*/cpufreq/scaling_governor", device_id=device_id)
-
+        
         # start fuzzing driver in background
         print(f"{GREEN}[LOG] {NC}Starting fuzzing...")
         execute_privileged_command('export PATH=/data/data/com.termux/files/usr/bin:$PATH && cd ' + HOME_DIRECTORY + HARNESS_FOLDER +' && nohup ./fuzzing_driver.sh ' + " ".join([sig, fuzz_time, "fuzz_input", "fuzz_output", str(int(from_stdin)), "0", str(int(parallel_fuzzing))]) + ' > /dev/null &', device_id=device_id, wait_for_termination=False)

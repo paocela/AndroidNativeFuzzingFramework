@@ -84,6 +84,27 @@ Fuzz()
 		APP=$(echo $APP_PATH | cut -d/ -f2)
 		METHOD=$(echo $LINE | cut -d: -f2 | cut -d" " -f1)
 
+		# extract library name containing target method
+		LIB_NAME=""
+		for lib in $(pwd)/$APP_PATH/lib/arm64-v8a/*.so ; do
+			if [[ $(readelf -s --wide $lib | grep $METHOD) ]] ; then
+				LIB_NAME=$(echo $lib | rev | cut -d "/" -f1 | rev)
+				break
+			else
+				JMETHOD=$(echo $METHOD | rev | cut -d "_" -f1 | rev)
+				if [[ $(strings $lib | grep $JMETHOD) ]] ; then
+					LIB_NAME=$(echo $lib | rev | cut -d "/" -f1 | rev)
+					break
+				fi
+			fi
+		done
+
+		if [ -z "$LIB_NAME" ] ; then
+			echo -e "${RED}[LOG]${NC} Error in fuzzing $APP - $METHOD (could not find native method, sometimes it's defined in Java side but then not implemented)" 
+			FUZZ_ERROR+="$APP - $METHOD\n"
+			continue
+		fi
+
 		echo -e "${GREEN}[LOG]${NC} Fuzzing $APP - $METHOD" 
 
 		# create fuzzer output sub-directory for app
@@ -99,9 +120,9 @@ Fuzz()
 				if [ "$READ_FROM_FILE" = "1" ] ; then
 					# fuzzer feed input trough file
 					if [ $IDX -eq 1 ] ; then
-						nohup timeout $TIME_TO_FUZZ afl-fuzz -i "../$FUZZ_INPUT_DIR" -o "../$FUZZ_OUTPUT_DIR/$APP:$METHOD" -M "Master" -- ./../harness "$(pwd)/../$APP_PATH" $METHOD @@  > /dev/null &
+						nohup timeout $TIME_TO_FUZZ afl-fuzz -i "../$FUZZ_INPUT_DIR" -o "../$FUZZ_OUTPUT_DIR/$APP:$METHOD" -M "Master" -- ./../harness "$(pwd)/../$APP_PATH" $LIB_NAME $METHOD @@  > /dev/null &
 					else
-						nohup timeout $TIME_TO_FUZZ afl-fuzz -i "../$FUZZ_INPUT_DIR" -o "../$FUZZ_OUTPUT_DIR/$APP:$METHOD" -S "Slave_$IDX" -- ./../harness "$(pwd)/../$APP_PATH" $METHOD @@  > /dev/null &
+						nohup timeout $TIME_TO_FUZZ afl-fuzz -i "../$FUZZ_INPUT_DIR" -o "../$FUZZ_OUTPUT_DIR/$APP:$METHOD" -S "Slave_$IDX" -- ./../harness "$(pwd)/../$APP_PATH" $LIB_NAME $METHOD @@  > /dev/null &
 					fi
 
 					# in this case can't check if fuzzing was successful as both nohup and AFL++_failing return 0
@@ -111,9 +132,9 @@ Fuzz()
 				else
 					# fuzzer feed input through stdin
 					if [ $IDX -eq 1 ] ; then
-						nohup timeout $TIME_TO_FUZZ afl-fuzz -i "../$FUZZ_INPUT_DIR" -o "../$FUZZ_OUTPUT_DIR/$APP:$METHOD" -M "Master" -- ./../harness "$(pwd)/../$APP_PATH" $METHOD  > /dev/null &
+						nohup timeout $TIME_TO_FUZZ afl-fuzz -i "../$FUZZ_INPUT_DIR" -o "../$FUZZ_OUTPUT_DIR/$APP:$METHOD" -M "Master" -- ./../harness "$(pwd)/../$APP_PATH" $LIB_NAME $METHOD  > /dev/null &
 					else
-						nohup timeout $TIME_TO_FUZZ afl-fuzz -i "../$FUZZ_INPUT_DIR" -o "../$FUZZ_OUTPUT_DIR/$APP:$METHOD" -S "Slave_$IDX" -- ./../harness "$(pwd)/../$APP_PATH" $METHOD  > /dev/null &
+						nohup timeout $TIME_TO_FUZZ afl-fuzz -i "../$FUZZ_INPUT_DIR" -o "../$FUZZ_OUTPUT_DIR/$APP:$METHOD" -S "Slave_$IDX" -- ./../harness "$(pwd)/../$APP_PATH" $LIB_NAME $METHOD  > /dev/null &
 					fi
 					
 					# in this case can't check if fuzzing was successful as both nohup and AFL++_failing return 0
@@ -131,7 +152,7 @@ Fuzz()
 		else 
 			if [ "$READ_FROM_FILE" = "1" ] ; then
 				# fuzzer feed input trough file
-				timeout $TIME_TO_FUZZ afl-fuzz -i "../$FUZZ_INPUT_DIR" -o "../$FUZZ_OUTPUT_DIR/$APP:$METHOD" -- ./../harness "$(pwd)/../$APP_PATH" $METHOD @@
+				timeout $TIME_TO_FUZZ afl-fuzz -i "../$FUZZ_INPUT_DIR" -o "../$FUZZ_OUTPUT_DIR/$APP:$METHOD" -- ./../harness "$(pwd)/../$APP_PATH" $LIB_NAME $METHOD @@
 
 				# check if fuzzer was able to fuzz
 				STATUS=$?
@@ -144,7 +165,7 @@ Fuzz()
 				fi
 			else
 				# fuzzer feed input through stdin
-				timeout $TIME_TO_FUZZ afl-fuzz -i "../$FUZZ_INPUT_DIR" -o "../$FUZZ_OUTPUT_DIR/$APP:$METHOD" -- ./../harness "$(pwd)/../$APP_PATH" $METHOD
+				timeout $TIME_TO_FUZZ afl-fuzz -i "../$FUZZ_INPUT_DIR" -o "../$FUZZ_OUTPUT_DIR/$APP:$METHOD" -- ./../harness "$(pwd)/../$APP_PATH" $LIB_NAME $METHOD
 
 				# check if fuzzer was able to fuzz
 				STATUS=$?

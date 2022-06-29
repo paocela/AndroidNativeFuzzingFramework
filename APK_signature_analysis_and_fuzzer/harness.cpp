@@ -27,17 +27,19 @@ JNIEnv *env;
 function_t *targetFunctionPtr;
 std::string targetFunctionName;
 std::string targetAppPath;
+std::string targetLibName;
 #define NUM_STRINGS 1
 
 int main(int argc, char *argv[]) {
 		/* Check parameters*/
-		if (argc != 3 && argc != 4) {
-			std::cerr << "Error calling harness: at least 2 or 3 parameters needed (depending on how fuzzer calls it)" << std::endl;
+		if (argc != 4 && argc != 5) {
+			std::cerr << "Error calling harness: at least 3 or 4 parameters needed (depending on how fuzzer calls it)" << std::endl;
 			return 1;
 		}
 
     	/* Get target app path (e.g. target_APK/app_name) */
     	targetAppPath = std::string(argv[1]);
+		targetLibName = std::string(argv[2]);
     	    	
 		/* Load ART
 		 - call JNI_CreateJavaVM 
@@ -48,7 +50,7 @@ int main(int argc, char *argv[]) {
         env = env_tmp;
 
         /* Find target function pointer in shared library */
-        targetFunctionName = std::string(argv[2]);
+        targetFunctionName = std::string(argv[3]);
         if (findFunctionPtrSharedLib() == 1) {
         	return 1;
         }
@@ -56,21 +58,20 @@ int main(int argc, char *argv[]) {
        	std::string path = targetAppPath + "/lib/arm64-v8a";
      	JNI_OnLoad_t *JNI_OnLoadPtr;
 
-        for (const auto & entry: fs::directory_iterator(path)) {
-	        void *lib = dlopen(entry.path().filename().c_str(), RTLD_NOW);
-	        if (!lib) 
-	        {
-	            std::cerr << dlerror() << std::endl;
-	            abort();
-	        }
+        
+		void *lib = dlopen(targetLibName.c_str(), RTLD_NOW);
+		if (!lib) 
+		{
+			std::cerr << dlerror() << std::endl;
+			abort();
+		}
 
-	        JNI_OnLoadPtr = (JNI_OnLoad_t *)dlsym(lib, "JNI_OnLoad");
-	        if (JNI_OnLoadPtr)
-	        {
-	            JNI_OnLoadPtr(javaVM, NULL);
-	        }
-	        dlclose(lib);
-    	}
+		JNI_OnLoadPtr = (JNI_OnLoad_t *)dlsym(lib, "JNI_OnLoad");
+		if (JNI_OnLoadPtr)
+		{
+			JNI_OnLoadPtr(javaVM, NULL);
+		}
+		dlclose(lib);
 
 
         /* Init forkserver here */
@@ -86,7 +87,7 @@ int main(int argc, char *argv[]) {
         jclass MainActivityCls;
         jint info;
 		std::string input[NUM_STRINGS];
-		std::ifstream f(argv[3]);
+		std::ifstream f(argv[4]);
 		jstring jinput[NUM_STRINGS];
 		jstring ret;
 		int idx = 0;
@@ -198,22 +199,19 @@ static auto load_art() -> std::pair<JavaVM *, JNIEnv *>
 int findFunctionPtrSharedLib()
 {
 	/* Search in pattern-defined functions */
-	std::string path = targetAppPath + "/lib/arm64-v8a";
-    for (const auto & entry: fs::directory_iterator(path)) {
-        void *lib = dlopen(entry.path().filename().c_str(), RTLD_NOW);
-        if (!lib) 
-        {
-            std::cerr << dlerror() << std::endl;
-            continue;
-        }
+	void *lib = dlopen(targetLibName.c_str(), RTLD_NOW);
+	if (!lib) 
+	{
+		std::cerr << dlerror() << std::endl;
+		return 1;
+	}
 
-        targetFunctionPtr = (function_t *)dlsym(lib, targetFunctionName.c_str());
-        if (targetFunctionPtr)
-        {
-            return 0;
-        }
-        dlclose(lib);
-    }
+	targetFunctionPtr = (function_t *)dlsym(lib, targetFunctionName.c_str());
+	if (targetFunctionPtr)
+	{
+		return 0;
+	}
+	dlclose(lib);
 
     /* Search in static-defined functions */
 	// duplicate JavaVM to inject fake RegisterNatives function
@@ -234,24 +232,22 @@ int findFunctionPtrSharedLib()
 	// extract java side native method name
 	targetFunctionName = targetFunctionName.substr(targetFunctionName.rfind("_") + 1);
 
-    for (const auto & entry: fs::directory_iterator(path)) {
-        void *lib = dlopen(entry.path().filename().c_str(), RTLD_NOW);
-        if (!lib) 
-        {
-            std::cerr << dlerror() << std::endl;
-            continue;
-        }
+	lib = dlopen(targetLibName.c_str(), RTLD_NOW);
+	if (!lib) 
+	{
+		std::cerr << dlerror() << std::endl;
+		return 1;
+	}
 
-        JNI_OnLoadPtr = (JNI_OnLoad_t *)dlsym(lib, "JNI_OnLoad");
-        if (JNI_OnLoadPtr)
-        {
-            JNI_OnLoadPtr(javaVM_fake, NULL);
-            if (targetFunctionPtr) {
-            	return 0;
-            }
-        }
-        dlclose(lib);
-    }
+	JNI_OnLoadPtr = (JNI_OnLoad_t *)dlsym(lib, "JNI_OnLoad");
+	if (JNI_OnLoadPtr)
+	{
+		JNI_OnLoadPtr(javaVM_fake, NULL);
+		if (targetFunctionPtr) {
+			return 0;
+		}
+	}
+	dlclose(lib);
 	
 	std::cerr << "Function " << targetFunctionName << " to be fuzzed not found" << std::endl;
 
