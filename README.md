@@ -6,7 +6,7 @@ Devices are connect to the central machine over the same network, using ADB
 ## Requirements
 * All Android devices must be rooted
 
-* All Android devices must be have a connection with the central machine through ADB. Steps (source [here](https://stackoverflow.com/questions/43973838/how-to-connect-multiple-android-devices-with-adb-over-wifi)):
+* All Android devices must have a connection with the central machine through ADB, either over a TCP/IP connection or with multiple USB ports. Steps  to set-up TCP/IP connection (source [here](https://stackoverflow.com/questions/43973838/how-to-connect-multiple-android-devices-with-adb-over-wifi)):
   1. connect device with USB cable to PC
   2. `adb -d tcpip 5555`
   3. `adb connect <device_ip_addr>` and remove USB cable
