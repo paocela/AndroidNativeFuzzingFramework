@@ -60,7 +60,7 @@ Options:
 ### fuzzing_driver.sh
 
 ```
-Syntax: ./fuzzing_driver.sh <signature-chosen> <time-to-fuzz> <input-dir> <output-dir> <read-from-file[0|1]> <AFL_DEBUG[0|1]>
+Syntax: ./fuzzing_driver.sh <signature-chosen> <time-to-fuzz> <input-dir> <output-dir> <read-from-file[0|1]> <AFL_DEBUG[0|1]> <parallel-fuzzing[0|N]>
 
 Fuzz native methods of different APKs with given signature
 
@@ -70,15 +70,15 @@ Options:
    <time-to-fuzz>: time to fuzz each method for, as float[s|m|h|d] (s=seconds, m=minutes, h=hours, d=days)
    <input-dir>: fuzzing input directory name, populated with meaningful seeds
    <output-dir>: fuzzing output directory name
-   <read-from-file>: flag to specify if fuzzer will read from file or from stdin (depending on how harness is implemented)
+   <read-from-file[0|1]>: flag to specify if fuzzer will read from file or from stdin (depending on how harness is implemented)
    <AFL_DEBUG[0|1]>: set if you want to debug AFL++
-   <parallel-fuzzing[0...#max_cores]>: Specify number N of cores to use for a parallel fuzzing campaign (if N > #cores, then max #cores is used)
+   <parallel-fuzzing[0|N]>: Specify number N of cores to use for a parallel fuzzing campaign (if N > #cores, then max #cores is used)
 ```
 
 ### fuzzing_one.sh
 
 ```
-Syntax: ./fuzzing_one.sh <method-chosen> <time-to-fuzz> <input-dir> <output-dir> <read-from-file[0|1]> <AFL_DEBUG[0|1]>
+Syntax: ./fuzzing_one.sh <method-chosen> <time-to-fuzz> <input-dir> <output-dir> <read-from-file[0|1]> <AFL_DEBUG[0|1]> <parallel-fuzzing[0|N]>
 
 Fuzz given native method
 
@@ -88,8 +88,9 @@ Options:
    <time-to-fuzz>: time to fuzz each method for, as float[s|m|h|d] (s=seconds, m=minutes, h=hours, d=days)
    <input-dir>: fuzzing input directory name, populated with meaningful seeds
    <output-dir>: fuzzing output directory name
-   <read-from-file>: flag to specify if fuzzer will read from file or from stdin (depending on how harness is implemented)
+   <read-from-file[0|1]>: flag to specify if fuzzer will read from file or from stdin (depending on how harness is implemented)
    <AFL_DEBUG[0|1]>: set if you want to debug AFL++
+   <parallel-fuzzing[0|N]>: Specify number N of cores to use for a parallel fuzzing campaign (if N > #cores, then max #cores is used)
 ```
 
 ### Steps to write harness
