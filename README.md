@@ -39,7 +39,7 @@ Devices are connect to the central machine over the same network, using ADB
 ## Usage
 
 ```
-python fuzzing_manager.py [-h] --action {fuzz_signature,fuzz_one,check} [--target TARGET]
+python fuzzing_manager.py [-h] --action {fuzz_signature,fuzz_one,check, kill_fuzzer} [--target TARGET]
                           [--fuzz_time FUZZ_TIME] [--from_file FROM_FILE] [--parallel_fuzzing PARALLEL_FUZZING]
 
 
@@ -47,8 +47,8 @@ Fuzz Android native libraries functions with given signature on multiple devices
 
 optional arguments:
   -h, --help            show this help message and exit
-  --action {fuzz_signature,fuzz_one,check}
-                        *fuzz_signature* to fuzz all functions given a signature, *fuzz_one* to fuzz given function name, *check* to check on each fuzzing campaing,   *kill_fuzzer* to kill all or devices running campaigns
+  --action {fuzz_signature,fuzz_one,check, kill_fuzzer}
+                        *fuzz_signature* to fuzz all functions given a signature, *fuzz_one* to fuzz given function name, *check* to check on each fuzzing campaings,   *kill_fuzzer* to kill on all device processes connected to the campaign
   --target TARGET       
                         Fuzzing target signature or method, or device to kill, e.g. String:String,Int, or Java_... or 192.168... (depending on --action)
   --fuzz_time FUZZ_TIME
