@@ -136,7 +136,7 @@ if __name__ == "__main__":
     
     parser = argparse.ArgumentParser(description='Fuzz Android native libraries functions with given signature on multiple devices through ADB')
 
-    parser.add_argument("--action", type=str, choices=["fuzz_signature", "fuzz_one", "check", "kill_fuzzer"], required=True, help="*fuzz_signature* to fuzz all functions given a signature, *fuzz_one* to fuzz given function name, *check* to check on each fuzzing campaing, *kill_fuzzer* to kill all or devices running campaigns")
+    parser.add_argument("--action", type=str, choices=["fuzz_signature", "fuzz_one", "check", "kill_fuzzer"], required=True, help="*fuzz_signature* to fuzz all functions given a signature, *fuzz_one* to fuzz given function name, *check* to check on each fuzzing campaing, *kill_fuzzer* to kill on all device processes connected to the campaign")
     parser.add_argument("--target", type=str, required=False, help="Fuzzing target signature or method, or device to kill, e.g. String:String,Int, or Java_... or 192.168... (depending on --action)")
     parser.add_argument("--fuzz_time", type=str, required=False, help="Time to fuzz for, of type float[s|m|h|d] (s=seconds, m=minutes, h=hours, d=days)")
     parser.add_argument("--from_file", type=bool, required=False, default=False, help="If True, harness get AFL++ input from file, else from stdin")
