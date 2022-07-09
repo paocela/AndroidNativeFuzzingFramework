@@ -34,7 +34,7 @@ def fuzz_signature(sig, fuzz_time, from_stdin, parallel_fuzzing):
         # unzip it
         execute_privileged_command(" ".join(["unzip", HOME_DIRECTORY + HARNESS_FOLDER_ZIP, "-d", HOME_DIRECTORY]), device_id=device_id)
         execute_privileged_command(" ".join(["rm", HOME_DIRECTORY + HARNESS_FOLDER_ZIP]), device_id=device_id)
-
+        
         # set PERFORMANCE to CPU frequency scaling
         print(f"{GREEN}[LOG] {NC}Setting CPU freq scaling to PERFORMANCE")
         execute_privileged_command("cd /sys/devices/system/cpu && echo performance | tee cpu*/cpufreq/scaling_governor", device_id=device_id)
@@ -70,7 +70,8 @@ def fuzz_one(method, fuzz_time, from_stdin, parallel_fuzzing):
 
 def check():
     print(f"{GREEN}[LOG] {NC}Pulling fuzzing output directory...")
-    shutil.rmtree('./fuzz_check')
+    if os.path.exists('./fuzz_check') and os.path.isdir('./fuzz_check'):
+    	shutil.rmtree('./fuzz_check')
     os.makedirs("./fuzz_check")
     for device_id in get_device_ids():
         os.makedirs("./fuzz_check/" + device_id.decode('utf-8'), exist_ok=True)
@@ -105,7 +106,10 @@ def check():
             if RUNTIME != 0:  
                 print(f"{YELLOW}[STATS] {NC}Function:{target_function} - Device:{device_id.decode('utf-8')}")
                 print(f"   ├── still running = {STILL_RUNNING}")
-                print(f"   ├── #crashes = {NUM_CRASHES} (unfortunately not unique)")
+                if NUM_CRASHES > 0:
+                	print(f"{RED}   ├── #crashes = {NUM_CRASHES}{NC} (unfortunately not unique)")	
+                else:
+                	print(f"   ├── #crashes = {NUM_CRASHES} (unfortunately not unique)")
                 print(f"   ├── runtime (sec) = {RUNTIME}")
                 print(f"   └── exec/s = {EXEC_PER_SEC} (avg = {mean(EXEC_PER_SEC)})")
 

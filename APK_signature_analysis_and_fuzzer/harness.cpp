@@ -97,21 +97,15 @@ int main(int argc, char *argv[]) {
 			if (input[idx].empty()) {
 				return 0;
 			}
-
-			// check if string contains spaces
-			if (std::count(input[idx].begin(), input[idx].end(), ' ') != 0) {
-				return 0;
-			}
 			
 			jinput[idx] = env->NewStringUTF(input[idx].c_str());
-			std::cout << input[idx] << std::endl;
 			idx++;
 			if (idx == NUM_STRINGS) {
 				break;
 			}
 		}
 
-		// fuzzing input must have not more then 4 lines
+		// fuzzing input must have not more then N lines
 		if (idx != NUM_STRINGS) {
 			return 0;
 		}

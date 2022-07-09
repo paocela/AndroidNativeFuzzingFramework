@@ -15,7 +15,7 @@ NC='\033[0m'
 Help()
 {
    # Display Help
-   echo "Syntax: ./fuzzing_one <method-chosen> <time-to-fuzz> <input-dir> <output-dir> <read-from-file[0|1]> <AFL_DEBUG[0|1]> <parallel-fuzzing[0|1]>" 
+   echo "Syntax: ./fuzzing_one <method-chosen> <time-to-fuzz> <input-dir> <output-dir> <read-from-file[0|1]> <AFL_DEBUG[0|1]> <parallel-fuzzing[0|N]>" 
    echo
    echo "Fuzz given native method"
    echo
@@ -114,35 +114,41 @@ Fuzz()
 			if [ "$READ_FROM_FILE" = "1" ] ; then
 				# fuzzer feed input trough file
 				if [ $IDX -eq 1 ] ; then
-					nohup timeout $TIME_TO_FUZZ afl-fuzz -i "../$FUZZ_INPUT_DIR" -o "../$FUZZ_OUTPUT_DIR/$APP:$METHOD" -M "Master" -- ./../harness "$(pwd)/../$APP_PATH" $LIB_NAME $METHOD @@  > /dev/null &
+					timeout $TIME_TO_FUZZ afl-fuzz -i "../$FUZZ_INPUT_DIR" -o "../$FUZZ_OUTPUT_DIR/$APP:$METHOD" -M "Master" -- ./../harness "$(pwd)/../$APP_PATH" $LIB_NAME $METHOD @@  > /dev/null &
 				else
-					nohup timeout $TIME_TO_FUZZ afl-fuzz -i "../$FUZZ_INPUT_DIR" -o "../$FUZZ_OUTPUT_DIR/$APP:$METHOD" -S "Slave_$IDX" -- ./../harness "$(pwd)/../$APP_PATH" $LIB_NAME $METHOD @@  > /dev/null &
+					timeout $TIME_TO_FUZZ afl-fuzz -i "../$FUZZ_INPUT_DIR" -o "../$FUZZ_OUTPUT_DIR/$APP:$METHOD" -S "Slave_$IDX" -- ./../harness "$(pwd)/../$APP_PATH" $LIB_NAME $METHOD @@  > /dev/null &
 				fi
 
+				# save PID last process started
+				pids[${IDX}]=$!
+
 				# in this case can't check if fuzzing was successful as both nohup and AFL++_failing return 0
-				if [ $IDX -eq 1 ] ; then
+				if [ $IDX -eq $NUM_CORES ] ; then
 					echo -e "${GREEN}[LOG]${NC} Done fuzzing $APP\n"
 				fi
 			else
 				# fuzzer feed input through stdin
 				if [ $IDX -eq 1 ] ; then
-					nohup timeout $TIME_TO_FUZZ afl-fuzz -i "../$FUZZ_INPUT_DIR" -o "../$FUZZ_OUTPUT_DIR/$APP:$METHOD" -M "Master" -- ./../harness "$(pwd)/../$APP_PATH" $LIB_NAME $METHOD  > /dev/null &
+					timeout $TIME_TO_FUZZ afl-fuzz -i "../$FUZZ_INPUT_DIR" -o "../$FUZZ_OUTPUT_DIR/$APP:$METHOD" -M "Master" -- ./../harness "$(pwd)/../$APP_PATH" $LIB_NAME $METHOD  > /dev/null &
 				else
-					nohup timeout $TIME_TO_FUZZ afl-fuzz -i "../$FUZZ_INPUT_DIR" -o "../$FUZZ_OUTPUT_DIR/$APP:$METHOD" -S "Slave_$IDX" -- ./../harness "$(pwd)/../$APP_PATH" $LIB_NAME $METHOD  > /dev/null &
+					timeout $TIME_TO_FUZZ afl-fuzz -i "../$FUZZ_INPUT_DIR" -o "../$FUZZ_OUTPUT_DIR/$APP:$METHOD" -S "Slave_$IDX" -- ./../harness "$(pwd)/../$APP_PATH" $LIB_NAME $METHOD  > /dev/null &
 				fi
+
+				# save PID last process started
+				pids[${IDX}]=$!
 		
 				# in this case can't check if fuzzing was successful as both nohup and AFL++_failing return 0
-				if [ $IDX -eq 1 ] ; then
+				if [ $IDX -eq $NUM_CORES ] ; then
 					echo -e "${GREEN}[LOG]${NC} Done fuzzing $APP\n"
 				fi
 			fi
 		done
+		
 		# wait for each core to finish (without this, this script/driver will always start max number of cores)
-		sleep 10s
-		IS_FUZZING=$(ps -ef | grep afl-fuzz | grep -v grep)
-		if [ ! -z "$IS_FUZZING" ] ; then
-			sleep $TIME_TO_FUZZ
-		fi
+		for pid in ${pids[*]} ; do
+			wait $pid
+		done
+
 	else
 		if [ "$READ_FROM_FILE" = "1" ] ; then
 			# fuzzer feed input trough file
