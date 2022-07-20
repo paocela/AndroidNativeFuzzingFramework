@@ -132,9 +132,14 @@ def subprocess_privileged(cmd, device_id=None):
     return p
 
 
-def execute_privileged_command(cmd, device_id=None, wait_for_termination=True, timeout=0):
+def execute_privileged_command(cmd, device_id=None, wait_for_termination=True, timeout=0, root=True):
     """ Executes the given privileged command on the device """
-    out, err = call_adb(["shell", "su -c '{}'".format(cmd)], device_id, wait_for_termination, timeout)
+    if not root:
+        out, err = call_adb(["shell", "su -c '{}'".format(cmd)], device_id, wait_for_termination, timeout)
+    else:
+        out, err = call_adb(["shell", "su -c '{}'".format(cmd)], device_id, wait_for_termination, timeout)
+        if err or b"invalid uid" in out:
+            out, err = call_adb(["shell", "su root sh -c '{}'".format(cmd)], device_id, wait_for_termination, timeout)
     if err:
         log.error("error executing privileged cmd. err: {}".format(err))
     return out, err
