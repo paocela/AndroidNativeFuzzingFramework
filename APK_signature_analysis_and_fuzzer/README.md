@@ -105,7 +105,7 @@ Options:
 ```bash
 # in APK_signature_analysis_and_fuzzer, do:
 $ export LD_PRELOAD=$(pwd)/../AFLplusplus-AndroidPatches/libLLVM-13.so:$LD_PRELOAD
-$ LD_LIBRARY_PATH=/apex/com.android.art/lib64:$(pwd)/target_APK/<app_name>/lib/arm64-v8a:/system/lib64 gdb --args ./harness target_APK/<app_name> <target_function_name> fuzz_output/<path/to/POC>
+$ LD_LIBRARY_PATH=/apex/com.android.art/lib64:$(pwd)/target_APK/<app_name>/lib/arm64-v8a:/system/lib64 gdb --args ./harness target_APK/<app_name> <target_library_name> <target_function_name> fuzz_output/<path/to/POC>
 ```
 
 ## Components
