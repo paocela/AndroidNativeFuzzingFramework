@@ -134,7 +134,7 @@ Analyze()
 		cd ..
 	fi
 
-	echo "${GREEN}[LOG]${NC} Counting signature occurrences (in signatures_all.txt)"
+	echo -e "${GREEN}[LOG]${NC} Counting signature occurrences (in signatures_all.txt)"
 	sort signatures_all.txt | uniq -c | sort -g
 }
 

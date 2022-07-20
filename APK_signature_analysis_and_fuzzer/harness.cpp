@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <regex>
 #include <sys/wait.h>
 #include <unistd.h>
 #include <stdio.h>
@@ -18,7 +19,7 @@ extern "C"
 	/***********************************/
 	/* MODIFY TARGET FUNCTION DEF HERE */
 	/***********************************/
-    typedef void function_t(JNIEnv *, jobject, jstring);
+    typedef jint function_t(JNIEnv *, jobject, jstring);
 }
 
 /* globals definitions */
@@ -40,6 +41,14 @@ int main(int argc, char *argv[]) {
     	/* Get target app path (e.g. target_APK/app_name) */
     	targetAppPath = std::string(argv[1]);
 		targetLibName = std::string(argv[2]);
+
+		/* Get target method name and its class full path */
+		targetFunctionName = std::string(argv[3]);
+
+		std::string className;
+		className = std::regex_replace(targetFunctionName, std::regex("_1"), "#");
+    	className = className.substr(className.find("_") + 1, className.rfind("_") - className.find("_") - 1);
+    	className = std::regex_replace(className, std::regex("_"), "/");
     	    	
 		/* Load ART
 		 - call JNI_CreateJavaVM 
@@ -50,7 +59,6 @@ int main(int argc, char *argv[]) {
         env = env_tmp;
 
         /* Find target function pointer in shared library */
-        targetFunctionName = std::string(argv[3]);
         if (findFunctionPtrSharedLib() == 1) {
         	return 1;
         }
@@ -73,12 +81,18 @@ int main(int argc, char *argv[]) {
 		}
 		dlclose(lib);
 
+	   	jclass CallerCls;
+		jobject CallerObj;
 
+		// allocate caller object (always passed as second argument)
+		CallerCls = env->FindClass(className.c_str());
+		CallerObj = env->AllocObject(CallerCls);
+		
         /* Init forkserver here */
        #ifdef __AFL_HAVE_MANUAL_CONTROL
           __AFL_INIT();
        #endif
-       
+
 		/******************************/
 		/* WRITE FUZZING HARNESS HERE */
 		/******************************/
@@ -109,10 +123,19 @@ int main(int argc, char *argv[]) {
 		if (idx != NUM_STRINGS) {
 			return 0;
 		}
+		/*
+        jclass MainActivityCls;
+		std::ifstream f(argv[4]);
+  		std::string content( (std::istreambuf_iterator<char>(f) ),
+							 (std::istreambuf_iterator<char>()    ) );
+		jstring jinput = env->NewStringUTF(content.c_str());
+		if (jinput == NULL) {
+			return 1;
+		}*/
       
         /* Call target function -- Fuzz */
 		std::cout << "CALLING..." << std::endl;
-        targetFunctionPtr(env, MainActivityCls, jinput[0]);
+        targetFunctionPtr(env, CallerObj, jinput[0]);
 
 		return 0;
 }
@@ -224,7 +247,9 @@ int findFunctionPtrSharedLib()
 	javaVM_fake->functions = javaVM_fake_functions;
 
 	// extract java side native method name
+	targetFunctionName = std::regex_replace(targetFunctionName, std::regex("_1"), "#");
 	targetFunctionName = targetFunctionName.substr(targetFunctionName.rfind("_") + 1);
+	targetFunctionName = std::regex_replace(targetFunctionName, std::regex("#"), "_");
 
 	lib = dlopen(targetLibName.c_str(), RTLD_NOW);
 	if (!lib) 

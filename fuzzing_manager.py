@@ -41,7 +41,7 @@ def fuzz_signature(sig, fuzz_time, from_stdin, parallel_fuzzing):
         
         # start fuzzing driver in background
         print(f"{GREEN}[LOG] {NC}Starting fuzzing...")
-        execute_privileged_command('export PATH=/data/data/com.termux/files/usr/bin:$PATH && cd ' + HOME_DIRECTORY + HARNESS_FOLDER +' && nohup ./fuzzing_driver.sh ' + " ".join([sig, fuzz_time, "fuzz_input", "fuzz_output", str(int(from_stdin)), "0", str(int(parallel_fuzzing))]) + ' > /dev/null &', device_id=device_id, wait_for_termination=False)
+        execute_privileged_command('export PATH=/data/data/com.termux/files/usr/bin:$PATH && cd ' + HOME_DIRECTORY + HARNESS_FOLDER +' && nohup ./fuzzing_driver.sh ' + " ".join([sig, fuzz_time, "fuzz_input", "fuzz_output", str(int(from_stdin)), "0", str(int(parallel_fuzzing))]) + ' > /dev/null &', device_id=device_id, wait_for_termination=False, root=False)
 
         print(f"{GREEN}[LOG] {NC}Done!")
 
@@ -74,6 +74,8 @@ def check():
     	shutil.rmtree('./fuzz_check')
     os.makedirs("./fuzz_check")
     for device_id in get_device_ids():
+        print(f"{GREEN}[LOG] {NC}Fetching output of device {device_id.decode('utf-8')}...")
+
         os.makedirs("./fuzz_check/" + device_id.decode('utf-8'), exist_ok=True)
         pull_privileged(HOME_DIRECTORY + HARNESS_FOLDER + "fuzz_output", "./fuzz_check/" + device_id.decode('utf-8'), is_directory=True, device_id=device_id)
 
@@ -90,11 +92,11 @@ def check():
             EXEC_PER_SEC = []
             RUNTIME = 0
             for core_output in os.listdir("./fuzz_check/" + device_id.decode('utf-8') + "/fuzz_output/" + target_function):
-                # number crashes per core
-                NUM_CRASHES += len([name for name in os.listdir("./fuzz_check/" + device_id.decode('utf-8') + "/fuzz_output/" + target_function + "/" + core_output + '/crashes/') if name != "README.txt"])
-
-                # number execs per core
+                
                 try:
+                    # number crashes per core
+                    NUM_CRASHES += len([name for name in os.listdir("./fuzz_check/" + device_id.decode('utf-8') + "/fuzz_output/" + target_function + "/" + core_output + '/crashes/') if name != "README.txt"])
+		            # number execs per core
                     f = open("./fuzz_check/" + device_id.decode('utf-8') + "/fuzz_output/" + target_function + "/" + core_output + "/fuzzer_stats")
                     lines = f.readlines()
                     EXEC_PER_SEC.append(float(lines[7].split(":")[-1]))
@@ -107,7 +109,7 @@ def check():
                 print(f"{YELLOW}[STATS] {NC}Function:{target_function} - Device:{device_id.decode('utf-8')}")
                 print(f"   ├── still running = {STILL_RUNNING}")
                 if NUM_CRASHES > 0:
-                	print(f"{RED}   ├── #crashes = {NUM_CRASHES}{NC} (unfortunately not unique)")	
+                	print(f"   ├── {RED}#crashes = {NUM_CRASHES}{NC} (unfortunately not unique)")	
                 else:
                 	print(f"   ├── #crashes = {NUM_CRASHES} (unfortunately not unique)")
                 print(f"   ├── runtime (sec) = {RUNTIME}")
