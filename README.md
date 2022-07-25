@@ -79,4 +79,4 @@ optional arguments:
 
 ## Example Setup
 
-![](/home/paocela/Immagini/fuzzing_setup.jpg)
+![](./Images/fuzzing_setup.jpg)
