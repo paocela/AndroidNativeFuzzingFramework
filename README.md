@@ -76,3 +76,7 @@ optional arguments:
 * **adb.py**: python library to integrate ADB commands
 * **fuzzing_manager.py**: manage interaction with all devices connected, start fuzzing campains and fetch intermediary results
 * **README.md**: this README
+
+## Example Setup
+
+![](/home/paocela/Immagini/fuzzing_setup.jpg)

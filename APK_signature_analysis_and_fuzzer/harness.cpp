@@ -19,7 +19,7 @@ extern "C"
 	/***********************************/
 	/* MODIFY TARGET FUNCTION DEF HERE */
 	/***********************************/
-    typedef jint function_t(JNIEnv *, jobject, jstring);
+    typedef void function_t(JNIEnv *, jobject, jstring, jstring, jstring);
 }
 
 /* globals definitions */
@@ -29,7 +29,7 @@ function_t *targetFunctionPtr;
 std::string targetFunctionName;
 std::string targetAppPath;
 std::string targetLibName;
-#define NUM_STRINGS 1
+#define NUM_STRINGS 3
 
 int main(int argc, char *argv[]) {
 		/* Check parameters*/
@@ -135,7 +135,7 @@ int main(int argc, char *argv[]) {
       
         /* Call target function -- Fuzz */
 		std::cout << "CALLING..." << std::endl;
-        targetFunctionPtr(env, CallerObj, jinput[0]);
+        targetFunctionPtr(env, CallerObj, jinput[0], jinput[1], jinput[2]);
 
 		return 0;
 }

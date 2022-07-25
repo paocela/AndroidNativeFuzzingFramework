@@ -29,7 +29,7 @@ def subprocess_adb(cmd, device_id=None, wait_for_termination=True):
         cmd.insert(0, "-s")
     cmd.insert(0, "adb")
     if not wait_for_termination:
-        cmd.insert(0, "15s") # this value could vary (depending on how much time the fuzzing_... script takes to start)
+        cmd.insert(0, "40s") # this value could vary (depending on how much time the fuzzing_... script takes to start - 15s)
         cmd.insert(0, "timeout")
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE, bufsize=0)
     else:
