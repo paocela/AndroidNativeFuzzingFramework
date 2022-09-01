@@ -5,7 +5,7 @@ The framework is composed of:
 
 * **a patched version of AFL++**, needed to port it on an Android device;
 * **a native method's signatures extractor**, working with applications APKs;
-* **a fuzzing harness dealing with the JNI**, the function pointer extraction and the fork server;
+* **a fuzzing harness** dealing with the JNI, the function pointer extraction and the fork server;
 *  **3 fuzzing drivers** required to parallelize each fuzzing campaign per device on a phone cluster.
 
 The results when using the framework on closed-source Android applications show that it is capable of both reproducing known CVEs in Android native components, and discovering new bugs.
